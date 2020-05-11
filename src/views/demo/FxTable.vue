@@ -1,5 +1,9 @@
 <template>
-  <FxTable v-bind="tableOptions"></FxTable>
+  <FxTable v-bind="tableOptions" :query="query">
+    <template #aside>
+      <div style="padding:10px;">DEMO</div>
+    </template>
+  </FxTable>
 </template>
 
 <script>
@@ -15,22 +19,34 @@ export default {
 
   data() {
     return {
+      query: {
+        key: ""
+      },
       tableOptions: {
         options: {
-          api: "/api/UserComponent?optionType=list",
-          toolbar: false,
-          pagination: false,
-          pageSize: 9999,
-          resHandler(res) {
-            return res.data.rows;
-          }
+          api: "/api/UserComponent?optionType=list"
+          // toolbar: false,
+          // pagination: false,
+          // pageSize: 9999,
+          // resHandler(res) {
+          //   return res.data.rows;
+          // },
+
+          // border:true,
+          // outBorder:false,
+
+          // asideTop:true,
+          // asideTopProps:{
+          //   showToggle:true
+          // },
+          // asideBottom:true,
         },
 
         columns: [
           {
             label: "NAME",
-            prop: "name"
-            // formatter: () => "AA"
+            prop: "name",
+            formatter: val => `<strong>${val}<strong>`
           }
         ],
 
