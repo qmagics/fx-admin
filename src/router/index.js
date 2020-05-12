@@ -1,39 +1,68 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Master from '@/layout/Master.vue';
+import Simple from '@/layout/Simple.vue';
 
 Vue.use(VueRouter)
 
-export const routes = [
+//在菜单列表中显示的路由
+export const MenuRoutes = [
   {
-    path: '/',
+    path: '/home',
+    component: () => import('@/views/Home.vue'),
     name: 'Home',
-    component: Home,
     meta: {
       title: '首页',
       icon: 'el-icon-s-home'
     }
   },
   {
-    path: '/fx-table',
-    name: 'FxTable',
-    component: () => import('@/views/demo/FxTable.vue'),
-    meta: {
-      title: 'FxTable',
-      icon: 'el-icon-date'
-    }
-  },
-  {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: () => import('@/views/About.vue'),
     meta: {
       title: '关于',
       icon: 'el-icon-info'
     }
+  },
+  {
+    path: '/demo',
+    name: 'Demo',
+    redirect: '/demo/fx-table',
+    component: Simple,
+    meta: {
+      title: 'DEMO',
+      icon: 'el-icon-document-copy'
+    },
+    children: [
+      {
+        path: '/demo/fx-table',
+        name: 'FxTable',
+        component: () => import('@/views/demo/FxTable.vue'),
+        meta: {
+          title: 'FxTable 表格',
+          icon: 'el-icon-date'
+        }
+      }
+    ]
+  }
+]
+
+export const routes = [
+  {
+    path: '/',
+    redirect: '/home',
+    name: 'MenuRoutes',
+    component: Master,
+    meta: {
+      title: 'MenuBase'
+    },
+    children: MenuRoutes
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Login')
   }
 ]
 
