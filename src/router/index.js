@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Master from '@/layout/Master.vue';
-import Simple from '@/layout/Simple.vue';
+import Master from '@/layout/Master';
+import Simple from '@/layout/Simple';
 
 Vue.use(VueRouter)
 
@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 export const MenuRoutes = [
   {
     path: '/home',
-    component: () => import('@/views/Home.vue'),
+    component: () => import('@/views/Home'),
     name: 'Home',
     meta: {
       title: '首页',
@@ -19,7 +19,7 @@ export const MenuRoutes = [
   {
     path: '/about',
     name: 'About',
-    component: () => import('@/views/About.vue'),
+    component: () => import('@/views/About'),
     meta: {
       title: '关于',
       icon: 'el-icon-info'
@@ -38,7 +38,7 @@ export const MenuRoutes = [
       {
         path: '/demo/fx-table',
         name: 'FxTable',
-        component: () => import('@/views/demo/FxTable.vue'),
+        component: () => import('@/views/demo/FxTable'),
         meta: {
           title: 'FxTable 表格',
           icon: 'el-icon-date'

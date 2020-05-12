@@ -56,4 +56,10 @@ export default {
 .el-main {
   position: relative;
 }
+
+.el-header{
+  background: #f9f9f9;
+  border-bottom: 1px solid #eee;
+  line-height: 40px;
+}
 </style>
