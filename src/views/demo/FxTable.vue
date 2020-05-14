@@ -10,7 +10,7 @@
       </template>
     </FxTable>
 
-    <el-dialog title="新增组件" :visible.sync="dlgVisible" :close-on-click-modal="false">
+    <!-- <el-dialog title="新增组件" :visible.sync="dlgVisible" :close-on-click-modal="false">
       <el-form :model="vm" label-width="80px">
         <el-form-item label="NAME">
           <el-input v-model="vm.name"></el-input>
@@ -21,13 +21,14 @@
         <el-button @click="dlgVisible=false">取消</el-button>
         <el-button type="primary">确认</el-button>
       </template>
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 
 <script>
 import FxTable from "fx-table";
 import "fx-table/lib/fx-table.min.css";
+// import Form from './Form';
 
 export default {
   components: {
@@ -36,7 +37,17 @@ export default {
 
   methods: {
     add() {
-      this.dlgVisible = true;
+      this.$modal({
+        component: () => import("./Form"),
+        title: "新增用户",
+        data: {
+          type: "add",
+          vm: {
+            foo: "bar"
+          },
+          columns: this.tableOptions.columns
+        }
+      });
     }
   },
 
@@ -70,12 +81,16 @@ export default {
             label: "NAME",
             prop: "name",
             formatter: val => `<strong>${val}<strong>`
+          },
+          {
+            label: "AGE",
+            prop: "age"
           }
         ],
 
         data: []
       },
-      dlgVisible: false,
+      // dlgVisible: false,
       vm: {}
     };
   }

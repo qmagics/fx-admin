@@ -2,15 +2,22 @@
   <div id="app">
     <router-view></router-view>
 
-    <el-dialog title="Global Dialog" visible>Global Dialog</el-dialog>
+    <Modal />
   </div>
 </template>
 
 <script>
+import Vue from "vue";
+import Modal from "@/components/modal";
+Vue.use(Modal);
+
 export default {
-  name: "App"
+  name: "App",
+
+  components: { Modal },
+
+  data() {
+    return {};
+  }
 };
 </script>
-
-<style>
-</style>
