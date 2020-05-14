@@ -4,6 +4,10 @@
       <el-form-item :label="c.label" :prop="c.prop" v-for="c in columns" :key="c.prop">
         <el-input v-model="vm[c.prop]"></el-input>
       </el-form-item>
+
+      <el-form-item style="text-align:right">
+        <el-button type="primary" @click="submit">提交</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -19,6 +23,12 @@ export default {
     return {
       model: this.vm
     };
+  },
+
+  methods:{
+    submit(){
+      this.$store.dispatch('modal/close')
+    }
   }
 };
 </script>

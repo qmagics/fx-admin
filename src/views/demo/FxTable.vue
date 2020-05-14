@@ -43,10 +43,14 @@ export default {
         data: {
           type: "add",
           vm: {
-            foo: "bar"
+            name: "bar"
           },
           columns: this.tableOptions.columns
-        }
+        },
+        // actions: {
+        //   submit() {},
+        //   cancel() {}
+        // }
       });
     }
   },
