@@ -2,7 +2,9 @@
   <div class="demo">
     <FxTable v-bind="tableOptions" :query="query">
       <template #aside>
-        <div style="padding:10px;">DEMO</div>
+        <div style="padding:10px;">
+          <pre>{{modal_list}}</pre>
+        </div>
       </template>
 
       <template #action>
@@ -29,6 +31,7 @@
 import FxTable from "fx-table";
 import "fx-table/lib/fx-table.min.css";
 // import Form from './Form';
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -37,21 +40,48 @@ export default {
 
   methods: {
     add() {
-      this.$modal({
-        component: () => import("./Form"),
-        title: "新增用户",
-        data: {
-          type: "add",
-          vm: {
-            name: "bar"
+      this.add1();
+    },
+    add1() {
+      this.$modal(
+        {
+          component: () => import("./Form"),
+          id: "AAA",
+
+          title: "新增用户1",
+
+          data: {
+            type: "add",
+            vm: {},
+            columns: this.tableOptions.columns
           },
-          columns: this.tableOptions.columns
+
+          actions: {
+            action1: function(vm) {
+              this.$alert("Action1操作成功!");
+              console.log("action1", vm);
+            },
+
+            action2(vm) {
+              this.$alert("Action2操作成功!");
+              console.log("action2", vm);
+            }
+          },
+
+          beforeClose(done, context) {
+            if (context.vm.name || context.vm.age) {
+              this.$confirm(
+                "您填写的信息还未保存，关闭后信息将丢失，是否继续？"
+              ).then(() => {
+                done();
+              });
+            } else {
+              done();
+            }
+          }
         },
-        // actions: {
-        //   submit() {},
-        //   cancel() {}
-        // }
-      });
+        this
+      );
     }
   },
 
@@ -62,7 +92,9 @@ export default {
       },
       tableOptions: {
         options: {
-          api: "/api/UserComponent?optionType=list"
+          api: "/api/UserComponent?optionType=list",
+
+          aside: true
           // toolbar: false,
           // pagination: false,
           // pageSize: 9999,
@@ -94,9 +126,14 @@ export default {
 
         data: []
       },
-      // dlgVisible: false,
       vm: {}
     };
+  },
+
+  computed: {
+    ...mapState({
+      modal_list: state => state.modal.modal_list
+    })
   }
 };
 </script>

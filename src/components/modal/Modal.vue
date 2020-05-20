@@ -1,7 +1,21 @@
 <template>
-  <el-dialog :title="title" :visible="visible" :before-close="beforeClose" @close="onClose">
-    <component :is="component" v-bind="data"></component>
-  </el-dialog>
+  <div class="modals">
+    <el-dialog
+      v-for="modal in modal_list"
+      :key="modal.id"
+      :title="modal.title"
+      :visible="modal.visible"
+      :before-close="getBeforeClose(modal)"
+      @close="onClose(modal)"
+    >
+      <component
+        :ref="'modalComponent_'+modal.id"
+        :is="modal.component"
+        v-bind="modal.data"
+        v-on="modal.actions"
+      ></component>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -19,21 +33,20 @@ export default {
 
   computed: {
     ...mapState({
-      title: state => state.modal.title,
-      visible: state => state.modal.visible,
-      component: state => state.modal.component,
-      data: state => state.modal.data,
+      modal_list: state => state.modal.modal_list
     })
   },
 
   methods: {
-    onClose() {
-      this.$store.dispatch("modal/close");
-      return false;
+    onClose(modal) {
+      this.$store.dispatch("modal/close", modal.id);
     },
 
-    beforeClose(done) {
-      done();
+    getBeforeClose(modal) {
+      const _this = this;
+      return function(done) {
+        modal.beforeClose(done, _this.$refs[`modalComponent_${modal.id}`][0]);
+      };
     }
   },
 
