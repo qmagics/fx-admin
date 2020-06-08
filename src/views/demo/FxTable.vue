@@ -1,14 +1,12 @@
 <template>
   <div class="demo">
-    <FxTable v-bind="tableOptions" :query="query">
+    <FxTable v-bind="tableOptions" :query="query" @row-click="onRowClick">
       <template #aside>
-        <div style="padding:10px;">
-          <pre>{{modal_list}}</pre>
-        </div>
+        <pre>{{modal_list}}</pre>
       </template>
 
       <template #action>
-        <el-button size="mini" icon="el-icon-plus" @click="add">新增</el-button>
+        <el-button icon="el-icon-plus" @click="add">新增</el-button>
       </template>
     </FxTable>
 
@@ -28,25 +26,25 @@
 </template>
 
 <script>
+import Vue from "vue";
 import FxTable from "fx-table";
 import "fx-table/lib/fx-table.min.css";
-// import Form from './Form';
 import { mapState } from "vuex";
+Vue.use(FxTable, {
+  presetRowStates: {
+    pending: false
+  }
+});
 
 export default {
-  components: {
-    FxTable
-  },
-
   methods: {
     add() {
       this.add1();
     },
     add1() {
-      this.$modal(
+      let modal = this.$modal(
         {
           component: () => import("./Form"),
-          id: "AAA",
 
           title: "新增用户1",
 
@@ -57,14 +55,16 @@ export default {
           },
 
           actions: {
-            action1: function(vm) {
-              this.$alert("Action1操作成功!");
-              console.log("action1", vm);
+            save(vm) {
+              this.$message("保存成功!");
+              console.log("save", vm);
+              modal.close();
             },
 
-            action2(vm) {
-              this.$alert("Action2操作成功!");
-              console.log("action2", vm);
+            cancel(vm) {
+              console.log(this);
+              this.$alert("已取消");
+              console.log("cancel", vm);
             }
           },
 
@@ -82,6 +82,9 @@ export default {
         },
         this
       );
+    },
+    onRowClick(row) {
+      console.log(row);
     }
   },
 

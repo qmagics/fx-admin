@@ -20,7 +20,7 @@ Modal.install = (Vue, opt = {}) => {
      * @param thisArg --this指向对象
      */
     Vue.prototype.$modal = (options, thisArg) => {
-        let { component, data, title, id, actions, beforeClose } = options;
+        let { component, data, title, id, actions, beforeClose, open = true } = options;
 
         //将函数的this指向绑定至调用方指定的对象上
         if (thisArg) {
@@ -34,28 +34,31 @@ Modal.install = (Vue, opt = {}) => {
             }
 
             actions = newActions;
-
-            // actions = actions.map(fn => fn.bind(thisArg));
         }
 
+        //modal实例对象
         const modal = {
             id: id || startModalId++,
             component,
             data,
             title,
-            visible: true,
+            visible: open,
             actions,
-            beforeClose
+            beforeClose,
+
+            close() {
+                store.dispatch('modal/close', this.id);
+            },
+
+            open() {
+                store.dispatch('modal/open', this);
+            }
         }
 
-        store.dispatch('modal/open', modal);
+        //添加modal到store
+        store.dispatch('modal/add', modal);
 
-        return modal ? {
-            instance: modal,
-            close: function () {
-                store.dispatch('modal/close', modal.id)
-            }
-        } : null;
+        return modal;
     }
 
     /**

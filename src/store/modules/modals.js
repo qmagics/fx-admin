@@ -10,6 +10,10 @@ function getIndexById(id) {
     return state.modal_list.findIndex(m => m.id === id);
 }
 
+function getIndexByModal(modal) {
+    return state.modal_list.findIndex(m => modal === m);
+}
+
 const mutations = {
     ADD_MODAL(state, modal) {
         state.modal_list.push(modal);
@@ -23,7 +27,7 @@ const mutations = {
         state.modal_list = [];
     },
 
-    SET_COMPONENT(state, index, component) {
+    SET_COMPONENT(state, { index, component }) {
         const modal = getModalByIndex(index);
 
         if (modal) {
@@ -31,7 +35,7 @@ const mutations = {
         }
     },
 
-    SET_DATA(state, index, data) {
+    SET_DATA(state, { index, data }) {
         const modal = getModalByIndex(index);
 
         if (modal) {
@@ -39,7 +43,7 @@ const mutations = {
         }
     },
 
-    SET_TITLE(state, index, title) {
+    SET_TITLE(state, { index, title }) {
         const modal = getModalByIndex(index);
 
         if (modal) {
@@ -47,15 +51,15 @@ const mutations = {
         }
     },
 
-    SET_VISIBLE(state, index, visible) {
+    SET_VISIBLE(state, { index, visible }) {
         const modal = getModalByIndex(index);
 
         if (modal) {
             modal.visible = visible;
         }
     },
-    
-    SET_ACTIONS(state, index, actions){
+
+    SET_ACTIONS(state, { index, actions }) {
         const modal = getModalByIndex(index);
 
         if (modal) {
@@ -65,10 +69,21 @@ const mutations = {
 }
 
 const actions = {
+    add({
+        commit
+    }, modal) {
+        console.log(modal)
+        commit('ADD_MODAL', modal);
+    },
+
     open({
         commit
     }, modal) {
-        commit('ADD_MODAL', modal);
+        const index = getIndexByModal(modal);
+        commit('SET_VISIBLE', {
+            index,
+            visible: true
+        });
     },
 
     close({
@@ -77,11 +92,26 @@ const actions = {
         const index = getIndexById(modalId, state);
 
         if (index >= 0) {
-            commit('SET_COMPONENT', index, null);
-            commit('SET_TITLE', index, '');
-            commit('SET_ACTIONS', index, []);
-            commit('SET_DATA', index, null);
-            commit('SET_VISIBLE', index, false);
+            commit('SET_COMPONENT', {
+                index,
+                component: null
+            });
+            commit('SET_TITLE', {
+                index,
+                title: null
+            });
+            commit('SET_ACTIONS', {
+                index,
+                actions: []
+            });
+            commit('SET_DATA', {
+                index,
+                data: null
+            });
+            commit('SET_VISIBLE', {
+                index,
+                visible: false
+            });
             commit('DELETE_MODAL', index);
         }
     },
