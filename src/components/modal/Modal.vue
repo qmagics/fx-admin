@@ -45,7 +45,11 @@ export default {
     getBeforeClose(modal) {
       const _this = this;
       return function(done) {
-        modal.beforeClose(done, _this.$refs[`modalComponent_${modal.id}`][0]);
+        if (!modal.beforeClose) {
+          done();
+        } else {
+          modal.beforeClose(done, _this.$refs[`modalComponent_${modal.id}`][0]);
+        }
       };
     }
   },

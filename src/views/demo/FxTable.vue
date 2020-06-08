@@ -44,14 +44,24 @@ export default {
     add1() {
       let modal = this.$modal(
         {
-          component: () => import("./Form"),
+          // component: () => import("./Form"),
+
+          component: {
+            props: {
+              link: String
+            },
+            render() {
+              return <el-link>{this.link}</el-link>;
+            }
+          },
 
           title: "新增用户1",
 
           data: {
             type: "add",
             vm: {},
-            columns: this.tableOptions.columns
+            columns: this.tableOptions.columns,
+            link: this.query.key
           },
 
           actions: {
@@ -66,19 +76,19 @@ export default {
               this.$alert("已取消");
               console.log("cancel", vm);
             }
-          },
-
-          beforeClose(done, context) {
-            if (context.vm.name || context.vm.age) {
-              this.$confirm(
-                "您填写的信息还未保存，关闭后信息将丢失，是否继续？"
-              ).then(() => {
-                done();
-              });
-            } else {
-              done();
-            }
           }
+
+          // beforeClose(done, context) {
+          //   if (context.vm.name || context.vm.age) {
+          //     this.$confirm(
+          //       "您填写的信息还未保存，关闭后信息将丢失，是否继续？"
+          //     ).then(() => {
+          //       done();
+          //     });
+          //   } else {
+          //     done();
+          //   }
+          // }
         },
         this
       );

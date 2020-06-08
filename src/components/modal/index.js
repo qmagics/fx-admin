@@ -24,16 +24,20 @@ Modal.install = (Vue, opt = {}) => {
 
         //将函数的this指向绑定至调用方指定的对象上
         if (thisArg) {
-            beforeClose = beforeClose.bind(thisArg);
-
-            let newActions = {};
-
-            for (let fnName in actions) {
-                let fn = actions[fnName];
-                newActions[fnName] = fn.bind(thisArg);
+            if (beforeClose) {
+                beforeClose = beforeClose.bind(thisArg);
             }
 
-            actions = newActions;
+            if (actions) {
+                let newActions = {};
+
+                for (let fnName in actions) {
+                    let fn = actions[fnName];
+                    newActions[fnName] = fn.bind(thisArg);
+                }
+
+                actions = newActions;
+            }
         }
 
         //modal实例对象
