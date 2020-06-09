@@ -1,0 +1,12 @@
+.demo {
+  height: 100%;
+  &.has-header {
+    .demo-body {
+      padding-top: 10px;
+      overflow: auto;
+    }
+  }
+  .demo-body {
+    height: calc(100% - 24px);
+  }
+}

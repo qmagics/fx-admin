@@ -28,8 +28,8 @@ export const MenuRoutes = [
   {
     path: '/demo',
     name: 'Demo',
-    redirect: '/demo/fx-table',
     component: Simple,
+    redirect: '/demo/fx-table',
     meta: {
       title: 'DEMO',
       icon: 'el-icon-document-copy'
@@ -38,11 +38,32 @@ export const MenuRoutes = [
       {
         path: '/demo/fx-table',
         name: 'FxTable',
-        component: () => import('@/views/demo/FxTable'),
+        component: Simple,
+        redirect: '/demo/fx-table/list',
         meta: {
           title: 'FxTable 表格',
           icon: 'el-icon-date'
-        }
+        },
+        children: [
+          {
+            path: '/demo/fx-table/list',
+            name: 'FxTableList',
+            component: () => import('@/views/demo/FxTable/ListPage.vue'),
+            meta: {
+              title: 'FxTable 列表页',
+              icon: 'el-icon-s-grid',
+            }
+          },
+          {
+            path: '/demo/fx-table/form',
+            name: 'FxTableForm',
+            component: () => import('@/views/demo/FxTable/FormPage.vue'),
+            meta: {
+              title: 'FxTable 表单页',
+              icon: 'el-icon-s-order',
+            }
+          }
+        ]
       }
     ]
   }

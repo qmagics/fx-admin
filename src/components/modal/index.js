@@ -46,7 +46,7 @@ Modal.install = (Vue, opt = {}) => {
             component,
             data,
             title,
-            visible: open,
+            visible: false,
             actions,
             beforeClose,
 
@@ -61,6 +61,13 @@ Modal.install = (Vue, opt = {}) => {
 
         //添加modal到store
         store.dispatch('modal/add', modal);
+
+        //打开modal(直接将modal的visible赋值为true的话,无法触发el-dialog的打开动画,体验稍差,因此在nextTick中open)
+        if (open === true) {
+            Vue.nextTick(() => {
+                store.dispatch('modal/open', modal);
+            });
+        }
 
         return modal;
     }
@@ -79,7 +86,7 @@ Modal.install = (Vue, opt = {}) => {
      * 关闭所有modal
      */
     Vue.prototype.$modal.closeAll = () => {
-        store.dispatch('modal/closeAll')
+        store.dispatch('modal/removeAll')
     }
 
     /**

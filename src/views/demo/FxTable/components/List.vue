@@ -1,34 +1,16 @@
 <template>
-  <div class="demo">
-    <FxTable v-bind="tableOptions" :query="query" @row-click="onRowClick">
-      <template #aside>
-        <pre>{{modal_list}}</pre>
-      </template>
-
-      <template #action>
-        <el-button icon="el-icon-plus" @click="add">新增</el-button>
-      </template>
-    </FxTable>
-
-    <!-- <el-dialog title="新增组件" :visible.sync="dlgVisible" :close-on-click-modal="false">
-      <el-form :model="vm" label-width="80px">
-        <el-form-item label="NAME">
-          <el-input v-model="vm.name"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <template slot="footer">
-        <el-button @click="dlgVisible=false">取消</el-button>
-        <el-button type="primary">确认</el-button>
-      </template>
-    </el-dialog>-->
-  </div>
+  <FxTable v-bind="tableOptions" :query="query" @row-dblClick="onRowDblClick">
+    <template #action>
+      <el-button icon="el-icon-plus" @click="add">新增</el-button>
+    </template>
+  </FxTable>
 </template>
 
 <script>
 import Vue from "vue";
 import FxTable from "fx-table";
 import "fx-table/lib/fx-table.min.css";
+import "@/style/demo.scss";
 import { mapState } from "vuex";
 Vue.use(FxTable, {
   presetRowStates: {
@@ -41,19 +23,11 @@ export default {
     add() {
       this.add1();
     },
+
     add1() {
       let modal = this.$modal(
         {
-          // component: () => import("./Form"),
-
-          component: {
-            props: {
-              link: String
-            },
-            render() {
-              return <el-link>{this.link}</el-link>;
-            }
-          },
+          component: () => import("./Form"),
 
           title: "新增用户1",
 
@@ -77,6 +51,7 @@ export default {
               console.log("cancel", vm);
             }
           }
+          // open: false
 
           // beforeClose(done, context) {
           //   if (context.vm.name || context.vm.age) {
@@ -93,21 +68,34 @@ export default {
         this
       );
     },
-    onRowClick(row) {
-      console.log(row);
+
+    onRowDblClick(row) {
+      this.toForm(row, "view");
+    },
+
+    toForm(row, type = "view") {
+      this.$router.push({
+        name: "FxTableForm",
+        params: {
+          row,
+          type,
+          columns: this.tableOptions.columns
+        }
+      });
     }
   },
 
   data() {
     return {
+      visible: false,
       query: {
         key: ""
       },
       tableOptions: {
         options: {
-          api: "/api/UserComponent?optionType=list",
+          api: "/api/UserComponent?optionType=list"
 
-          aside: true
+          // aside: true
           // toolbar: false,
           // pagination: false,
           // pageSize: 9999,
@@ -132,8 +120,46 @@ export default {
             formatter: val => `<strong>${val}<strong>`
           },
           {
-            label: "AGE",
-            prop: "age"
+            label: "TYPE",
+            prop: "type",
+            component: () => import("@/components/cells/CellSelect"),
+            componentProps: {
+              selections: [
+                { label: "表格", value: "table" },
+                { label: "自定义", value: "custom" },
+                { label: "组", value: "group" }
+              ]
+            }
+          },
+          {
+            label: "操作",
+            field: "id",
+            width: 150,
+            component: {
+              props: ["row", "columns", "toForm"],
+              render() {
+                return (
+                  <div>
+                    <el-button
+                      onClick={() => {
+                        this.toForm(this.row, "view");
+                      }}
+                    >
+                      查看
+                    </el-button>
+                    <el-button
+                      onClick={() => {
+                        this.toForm(this.row, "edit");
+                      }}
+                      icon="el-icon-edit"
+                    ></el-button>
+                  </div>
+                );
+              }
+            },
+            componentProps: {
+              toForm: this.toForm
+            }
           }
         ],
 
@@ -150,9 +176,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.demo {
-  height: 100%;
-}
-</style>

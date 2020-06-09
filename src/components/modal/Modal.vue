@@ -42,6 +42,10 @@ export default {
       this.$store.dispatch("modal/close", modal.id);
     },
 
+    onClosed(modal) {
+      this.$store.dispatch("modal/remove", modal.id);
+    },
+
     getBeforeClose(modal) {
       const _this = this;
       return function(done) {
@@ -57,6 +61,3 @@ export default {
   created() {}
 };
 </script>
-
-<style>
-</style>

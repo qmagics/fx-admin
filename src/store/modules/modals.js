@@ -23,7 +23,7 @@ const mutations = {
         state.modal_list.splice(index, 1);
     },
 
-    CLEAR_ALL_MODAL(state) {
+    DELETE_ALL_MODAL(state) {
         state.modal_list = [];
     },
 
@@ -72,7 +72,6 @@ const actions = {
     add({
         commit
     }, modal) {
-        console.log(modal)
         commit('ADD_MODAL', modal);
     },
 
@@ -87,6 +86,19 @@ const actions = {
     },
 
     close({
+        commit
+    }, modalId) {
+        const index = getIndexById(modalId, state);
+
+        if (index >= 0) {
+            commit('SET_VISIBLE', {
+                index,
+                visible: false
+            });
+        }
+    },
+
+    remove({
         commit
     }, modalId) {
         const index = getIndexById(modalId, state);
@@ -108,16 +120,12 @@ const actions = {
                 index,
                 data: null
             });
-            commit('SET_VISIBLE', {
-                index,
-                visible: false
-            });
             commit('DELETE_MODAL', index);
         }
     },
 
-    closeAll({ commit }) {
-        commit('CLEAR_ALL_MODAL');
+    removeAll({ commit }) {
+        commit('DELETE_ALL_MODAL');
     }
 }
 
