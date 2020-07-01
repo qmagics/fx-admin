@@ -7,6 +7,7 @@
       :visible="modal.visible"
       :before-close="getBeforeClose(modal)"
       @close="onClose(modal)"
+      @closed="onClosed(modal)"
     >
       <component
         :ref="'modalComponent_'+modal.id"
@@ -69,9 +70,17 @@ export default {
     
      //弹窗按钮点击
     onModalBtnClick(btn, modal) {
+      const { method, callback } = btn;
+
+      if (!method) {
+        this.onClose(modal);
+        return;
+      }
+
+      //弹窗内实例组件上下文对象
       const ctx = this.$refs[`modalComponent_${modal.id}`][0];
 
-      ctx && ctx[btn.method] && ctx[btn.method].call(null, btn.callback);
+      ctx && ctx[method] && ctx[method].call(null, callback);
     }
   },
 
