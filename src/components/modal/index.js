@@ -20,7 +20,7 @@ Modal.install = (Vue, opt = {}) => {
      * @param thisArg --this指向对象
      */
     Vue.prototype.$modal = (options, thisArg) => {
-        let { component, data, title, id, actions, beforeClose, open = true } = options;
+        let { component, data, title, id, actions, btns, beforeClose, open = true } = options;
 
         //将函数的this指向绑定至调用方指定的对象上
         if (thisArg) {
@@ -48,6 +48,7 @@ Modal.install = (Vue, opt = {}) => {
             title,
             visible: false,
             actions,
+            btns,
             beforeClose,
 
             close() {

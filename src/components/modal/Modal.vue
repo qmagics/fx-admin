@@ -14,6 +14,16 @@
         v-bind="modal.data"
         v-on="modal.actions"
       ></component>
+
+      <template #footer>
+        <el-button
+          v-for="(btn,index) in modal.btns"
+          :key="index"
+          size="mini"
+          :type="btn.type"
+          @click="onModalBtnClick(btn,modal)"
+        >{{btn.name}}</el-button>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -55,6 +65,13 @@ export default {
           modal.beforeClose(done, _this.$refs[`modalComponent_${modal.id}`][0]);
         }
       };
+    },
+    
+     //弹窗按钮点击
+    onModalBtnClick(btn, modal) {
+      const ctx = this.$refs[`modalComponent_${modal.id}`][0];
+
+      ctx && ctx[btn.method] && ctx[btn.method].call(null, btn.callback);
     }
   },
 
